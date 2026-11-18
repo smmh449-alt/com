@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 330" width="100%" height="100%">
+  <defs>
+    <linearGradient id="spine-grad-2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#000" stop-opacity="0.25"/>
+      <stop offset="3%" stop-color="#fff" stop-opacity="0.3"/>
+      <stop offset="6%" stop-color="#000" stop-opacity="0.08"/>
+      <stop offset="10%" stop-color="#fff" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="bg-grad-2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f8fcfa"/>
+      <stop offset="100%" stop-color="#eaf3ee"/>
+    </linearGradient>
+    <linearGradient id="art-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#cbe3db"/>
+      <stop offset="50%" stop-color="#b2d8d8"/>
+      <stop offset="100%" stop-color="#84a59d"/>
+    </linearGradient>
+    <filter id="soft-shadow-2" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- 책 표지 베이스 -->
+  <rect x="0" y="0" width="240" height="330" rx="8" fill="url(#bg-grad-2)"/>
+
+  <!-- 상단 뱃지 -->
+  <circle cx="32" cy="30" r="14" fill="#2d6a4f" />
+  <text x="32" y="27" font-family="'Jua', sans-serif" font-size="8" fill="#d8f3dc" text-anchor="middle" font-weight="bold">AI</text>
+  <text x="32" y="37" font-family="'NanumSquareRound', sans-serif" font-size="6" fill="#fff" text-anchor="middle">자동채점</text>
+
+  <!-- 우측 상단 말풍선 -->
+  <rect x="168" y="18" width="56" height="24" rx="4" fill="#40916c" opacity="0.9"/>
+  <text x="196" y="29" font-family="'Jua', sans-serif" font-size="7" fill="#fff" text-anchor="middle">이렇게 기특한</text>
+  <text x="196" y="38" font-family="'Jua', sans-serif" font-size="8" fill="#b7e4c7" text-anchor="middle" font-weight="bold">적중률 1위</text>
+
+  <!-- 중앙 명화/일러스트 (귀여운 두 아이 모티브) -->
+  <g transform="translate(20, 52)">
+    <rect x="0" y="0" width="200" height="135" rx="6" fill="url(#art-grad-2)" filter="url(#soft-shadow-2)"/>
+    <rect x="10" y="10" width="180" height="115" rx="4" fill="#ffffff" opacity="0.35"/>
+    
+    <!-- 따스한 방 안 일러스트 요소 -->
+    <circle cx="150" cy="50" r="28" fill="#ffeaa7" opacity="0.5"/>
+    <!-- 아이 1 실루엣 -->
+    <circle cx="85" cy="55" r="13" fill="#e76f51" opacity="0.85"/>
+    <ellipse cx="85" cy="85" rx="14" ry="18" fill="#f4a261" opacity="0.9"/>
+    <!-- 아이 2 실루엣 -->
+    <circle cx="130" cy="45" r="12" fill="#52b788" opacity="0.9"/>
+    <ellipse cx="130" cy="80" rx="13" ry="22" fill="#74c69d" opacity="0.95"/>
+    <line x1="130" y1="58" x2="148" y2="40" stroke="#52b788" stroke-width="4" stroke-linecap="round"/>
+    
+    <!-- 작은 튤립 꽃들 -->
+    <circle cx="45" cy="100" r="5" fill="#f28482"/>
+    <path d="M 45 105 L 45 118" stroke="#52b788" stroke-width="2"/>
+    <circle cx="60" cy="104" r="4" fill="#f6bd60"/>
+    <path d="M 60 108 L 60 118" stroke="#52b788" stroke-width="2"/>
+
+    <text x="100" y="122" font-family="'NanumSquareRound', sans-serif" font-size="7" fill="#1b4332" text-anchor="middle" letter-spacing="1">MASTERPIECE EDITION</text>
+  </g>
+
+  <!-- 타이틀 박스: 컴퓨터활용능력 2급 실기 -->
+  <g transform="translate(18, 175)" filter="url(#soft-shadow-2)">
+    <rect x="0" y="0" width="204" height="42" rx="6" fill="#ffffff" stroke="#2a9d8f" stroke-width="1.8"/>
+    <text x="12" y="18" font-family="'NanumSquareRound', 'Jua', sans-serif" font-size="10" fill="#666" font-weight="bold">컴퓨터활용능력</text>
+    <rect x="12" y="23" width="70" height="14" rx="3" fill="#2a9d8f"/>
+    <text x="47" y="34" font-family="'Jua', sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">2급 실기</text>
+    <text x="90" y="34" font-family="'Jua', sans-serif" font-size="10" fill="#264653">기본서 [스프레드시트 실무]</text>
+  </g>
+
+  <!-- 하단 수험 정보 및 바코드 -->
+  <g transform="translate(20, 235)">
+    <rect x="0" y="0" width="95" height="15" rx="3" fill="#e8f5e9"/>
+    <text x="47" y="11" font-family="'NanumSquareRound', sans-serif" font-size="7.5" fill="#1b4332" text-anchor="middle">최신 개정판 스프레드시트</text>
+
+    <rect x="100" y="0" width="95" height="15" rx="3" fill="#e8f5e9"/>
+    <text x="147" y="11" font-family="'NanumSquareRound', sans-serif" font-size="7.5" fill="#2a9d8f" text-anchor="middle">무료 동영상 전강의 제공</text>
+
+    <text x="2" y="34" font-family="'NanumSquareRound', sans-serif" font-size="7" fill="#444">✔ 2027 출제기준 완벽반영</text>
+    <text x="2" y="46" font-family="'NanumSquareRound', sans-serif" font-size="7" fill="#444">✔ 실습 파일 및 자동채점 지원</text>
+
+    <!-- 연도 2027 강조 -->
+    <text x="195" y="45" font-family="'Jua', sans-serif" font-size="24" fill="#264653" text-anchor="end" font-weight="bold">2027</text>
+    <text x="195" y="55" font-family="'NanumSquareRound', sans-serif" font-size="7" fill="#888" text-anchor="end">YOUNGJIN.COM</text>
+
+    <!-- 바코드 그래픽 -->
+    <g transform="translate(130, 60)">
+      <line x1="0" y1="0" x2="0" y2="15" stroke="#333" stroke-width="1.5"/>
+      <line x1="4" y1="0" x2="4" y2="15" stroke="#333" stroke-width="1"/>
+      <line x1="7" y1="0" x2="7" y2="15" stroke="#333" stroke-width="2"/>
+      <line x1="12" y1="0" x2="12" y2="15" stroke="#333" stroke-width="1"/>
+      <line x1="16" y1="0" x2="16" y2="15" stroke="#333" stroke-width="2.5"/>
+      <line x1="22" y1="0" x2="22" y2="15" stroke="#333" stroke-width="1"/>
+      <line x1="26" y1="0" x2="26" y2="15" stroke="#333" stroke-width="1.5"/>
+      <line x1="31" y1="0" x2="31" y2="15" stroke="#333" stroke-width="2"/>
+      <line x1="37" y1="0" x2="37" y2="15" stroke="#333" stroke-width="1"/>
+      <line x1="42" y1="0" x2="42" y2="15" stroke="#333" stroke-width="2"/>
+      <line x1="48" y1="0" x2="48" y2="15" stroke="#333" stroke-width="1"/>
+      <line x1="54" y1="0" x2="54" y2="15" stroke="#333" stroke-width="2.5"/>
+      <line x1="60" y1="0" x2="60" y2="15" stroke="#333" stroke-width="1"/>
+    </g>
+  </g>
+
+  <!-- 책등 접지선 오버레이 -->
+  <rect x="0" y="0" width="22" height="330" rx="8" fill="url(#spine-grad-2)" pointer-events="none"/>
+  <rect x="0.5" y="0.5" width="239" height="329" rx="8" fill="none" stroke="#b7e4c7" stroke-width="1" pointer-events="none"/>
+</svg>

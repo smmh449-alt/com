@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 330" width="100%" height="100%">
+  <defs>
+    <linearGradient id="spine-grad-purple" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#000" stop-opacity="0.25"/>
+      <stop offset="3%" stop-color="#fff" stop-opacity="0.3"/>
+      <stop offset="6%" stop-color="#000" stop-opacity="0.08"/>
+      <stop offset="10%" stop-color="#fff" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="purple-top" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6a4c93"/>
+      <stop offset="100%" stop-color="#553a7a"/>
+    </linearGradient>
+    <linearGradient id="purple-bottom" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3d2657"/>
+      <stop offset="100%" stop-color="#2c1a40"/>
+    </linearGradient>
+    <filter id="soft-shadow-3" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <!-- 베이스 배경: 상단 파스텔 바이올렛 -->
+  <rect x="0" y="0" width="240" height="330" rx="8" fill="url(#purple-top)"/>
+
+  <!-- 상단 대형 메인 타이틀 블록: "기출 문제집" -->
+  <g transform="translate(24, 28)">
+    <text x="0" y="44" font-family="'Jua', sans-serif" font-size="44" fill="#ffffff" letter-spacing="-1">기출</text>
+    <text x="0" y="92" font-family="'Jua', sans-serif" font-size="44" fill="#ffffff" letter-spacing="-1">문제집</text>
+  </g>
+
+  <!-- 우측 상단 배지 & 적중률 -->
+  <g transform="translate(160, 20)">
+    <!-- 적중률 텍스트 -->
+    <rect x="0" y="0" width="60" height="20" rx="3" fill="#ffffff" opacity="0.15"/>
+    <text x="30" y="9" font-family="'NanumSquareRound', sans-serif" font-size="6" fill="#f8edeb" text-anchor="middle">이렇게 기특한</text>
+    <text x="30" y="17" font-family="'NanumSquareRound', sans-serif" font-size="6.5" fill="#f8edeb" text-anchor="middle" font-weight="bold">적중률 1위</text>
+
+    <!-- 원형 1위 배지 -->
+    <circle cx="30" cy="48" r="16" fill="#ffffff" filter="url(#soft-shadow-3)"/>
+    <text x="30" y="44" font-family="'NanumSquareRound', sans-serif" font-size="7" fill="#6a4c93" text-anchor="middle" font-weight="bold">AI 적중</text>
+    <text x="30" y="57" font-family="'Jua', sans-serif" font-size="12" fill="#e63946" text-anchor="middle" font-weight="bold">1위</text>
+
+    <!-- 유튜브 아이콘 뱃지 -->
+    <circle cx="30" cy="85" r="12" fill="#ffb4a2" opacity="0.9"/>
+    <polygon points="27,80 27,90 35,85" fill="#6a4c93"/>
+  </g>
+
+  <!-- 하단 짙은 영역 (하단 45%) -->
+  <path d="M 0 150 L 240 150 L 240 322 A 8 8 0 0 1 232 330 L 8 330 A 8 8 0 0 1 0 322 Z" fill="url(#purple-bottom)"/>
+
+  <!-- 하단 텍스트 및 서브타이틀 -->
+  <g transform="translate(24, 185)">
+    <rect x="0" y="-18" width="55" height="15" rx="3" fill="#9d4edd" opacity="0.7"/>
+    <text x="27.5" y="-8" font-family="'NanumSquareRound', sans-serif" font-size="7.5" fill="#ffffff" text-anchor="middle">스마트 채점</text>
+
+    <text x="0" y="16" font-family="'Jua', sans-serif" font-size="22" fill="#ffffff">컴퓨터활용능력</text>
+    <text x="0" y="42" font-family="'Jua', sans-serif" font-size="22" fill="#d8bbff">1급 실기</text>
+
+    <text x="0" y="70" font-family="'NanumSquareRound', sans-serif" font-size="8" fill="#e0aaff">최신 개정판 동영상 강의 전강 무료 제공</text>
+    <text x="0" y="82" font-family="'NanumSquareRound', sans-serif" font-size="7" fill="#c77dff">자동채점 프로그램 완벽 호환 | 기출 20회</text>
+
+    <!-- 연도 2027 -->
+    <text x="195" y="70" font-family="'Jua', sans-serif" font-size="24" fill="#ffffff" text-anchor="end" font-weight="bold">2027</text>
+    <text x="195" y="80" font-family="'NanumSquareRound', sans-serif" font-size="7" fill="#b8c0ff" text-anchor="end">영진닷컴</text>
+
+    <!-- 바코드 그래픽 -->
+    <g transform="translate(132, 88)">
+      <line x1="0" y1="0" x2="0" y2="15" stroke="#ffffff" stroke-width="1.5" opacity="0.8"/>
+      <line x1="4" y1="0" x2="4" y2="15" stroke="#ffffff" stroke-width="1" opacity="0.8"/>
+      <line x1="8" y1="0" x2="8" y2="15" stroke="#ffffff" stroke-width="2" opacity="0.8"/>
+      <line x1="14" y1="0" x2="14" y2="15" stroke="#ffffff" stroke-width="1.5" opacity="0.8"/>
+      <line x1="18" y1="0" x2="18" y2="15" stroke="#ffffff" stroke-width="2.5" opacity="0.8"/>
+      <line x1="24" y1="0" x2="24" y2="15" stroke="#ffffff" stroke-width="1" opacity="0.8"/>
+      <line x1="28" y1="0" x2="28" y2="15" stroke="#ffffff" stroke-width="2" opacity="0.8"/>
+      <line x1="34" y1="0" x2="34" y2="15" stroke="#ffffff" stroke-width="1.5" opacity="0.8"/>
+      <line x1="40" y1="0" x2="40" y2="15" stroke="#ffffff" stroke-width="2.5" opacity="0.8"/>
+      <line x1="48" y1="0" x2="48" y2="15" stroke="#ffffff" stroke-width="1" opacity="0.8"/>
+      <line x1="54" y1="0" x2="54" y2="15" stroke="#ffffff" stroke-width="2" opacity="0.8"/>
+      <line x1="60" y1="0" x2="60" y2="15" stroke="#ffffff" stroke-width="1.5" opacity="0.8"/>
+    </g>
+  </g>
+
+  <!-- 책등 접지선 오버레이 -->
+  <rect x="0" y="0" width="22" height="330" rx="8" fill="url(#spine-grad-purple)" pointer-events="none"/>
+  <rect x="0.5" y="0.5" width="239" height="329" rx="8" fill="none" stroke="#7b5294" stroke-width="1" pointer-events="none"/>
+</svg>

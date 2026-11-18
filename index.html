@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>컴퓨터활용능력 실기 채점프로그램 - 몽글몽글 실기채점</title>
+  <!-- Google Fonts: 몽글몽글 귀여운 둥근 서체 및 나눔스퀘어라운드 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Chart.js CDN for interactive charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- 상단 글로벌 헤더 -->
+  <header class="global-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <span class="brand-flower">🌷</span>
+        <div class="brand-text-wrap">
+          <div class="brand-title-row">
+            <h1 class="brand-title">컴활 실기 채점소</h1>
+            <span class="brand-badge">몽글몽글 스마트 채점</span>
+          </div>
+          <p class="brand-desc">컴퓨터활용능력 1급 · 2급 실기 공식 수험서 자동 채점 프로그램</p>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a href="javascript:void(0)" class="nav-link" id="nav-home">
+          <span class="nav-icon">🏠</span> <span>채점프로그램 Home</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-link" id="nav-archive">
+          <span class="nav-icon">📂</span> <span>출판사 자료실</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-link" id="nav-criteria">
+          <span class="nav-icon">📋</span> <span>2급 실기 채점기준</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-link" id="nav-help">
+          <span class="nav-icon">💡</span> <span>도움말 & FAQ</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ======================================================== -->
+  <!-- 1. 메인 화면 (도서 목록) -->
+  <!-- ======================================================== -->
+  <main id="home-view" class="page-view active">
+    <div class="container">
+      
+      <!-- 2027년도 섹션 -->
+      <section class="section-panel">
+        <div class="panel-header header-2027">
+          <div class="panel-title">
+            <span class="title-icon">📘</span>
+            <span>2027년도 컴퓨터활용능력 실기 출간교재</span>
+            <span class="panel-tag">NEW 최신판</span>
+          </div>
+          <div class="panel-actions">
+            <button class="btn-pill" onclick="showArchiveView()">🌸 출판사 자료실</button>
+            <button class="btn-pill" onclick="alert('교재건의 Q&A로 이동합니다.')">💬 교재건의 Q&A</button>
+            <button class="btn-pill" onclick="alert('오류 신고하기 페이지로 이동합니다.')">🚨 오류 신고하기</button>
+          </div>
+        </div>
+        <div class="books-grid" id="grid-2027">
+          <!-- JS에서 동적 렌더링 -->
+        </div>
+      </section>
+
+      <!-- 2026년도 섹션 -->
+      <section class="section-panel">
+        <div class="panel-header header-2026">
+          <div class="panel-title">
+            <span class="title-icon">📗</span>
+            <span>2026년도 컴퓨터활용능력 실기 출간교재</span>
+            <span class="panel-tag tag-green">스테디셀러</span>
+          </div>
+          <div class="panel-actions">
+            <button class="btn-pill" onclick="showArchiveView()">🌸 출판사 자료실</button>
+            <button class="btn-pill" onclick="alert('교재건의 Q&A로 이동합니다.')">💬 교재건의 Q&A</button>
+            <button class="btn-pill" onclick="alert('오류 신고하기 페이지로 이동합니다.')">🚨 오류 신고하기</button>
+          </div>
+        </div>
+        <div class="books-grid" id="grid-2026">
+          <!-- JS에서 동적 렌더링 -->
+        </div>
+      </section>
+
+      <!-- 중간 배너 / 검색 -->
+      <div class="banner-box">
+        <span style="font-weight: bold; color: #e74c3c;">coupang</span>
+        <input type="text" placeholder="쿠팡에서 실기 교재 검색..." style="flex:1; margin:0 15px; padding:6px 12px; border:1px solid #ccc; border-radius:4px; font-size:12px;">
+        <span style="color:#888; font-size:11px;">쿠팡 파트너스 활동의 일환으로 수수료를 제공받을 수 있습니다.</span>
+      </div>
+
+      <!-- 하단 통계 요약 (채점인원 누적통계 / 시간대별 채점자수) -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-title">📊 채점인원 누적통계</div>
+          <div class="chart-wrapper">
+            <canvas id="homeTotalChart"></canvas>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-title">🕒 시간대별 채점자수</div>
+          <div class="chart-wrapper">
+            <canvas id="homeHourlyChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 홈 푸터 -->
+      <footer class="global-footer">
+        Program by kys (2011) e-mail : pang2041@hanafos.com
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- 2. 상세 세부화면 (채점 페이지) -->
+  <!-- ======================================================== -->
+  <main id="detail-view" class="page-view">
+    <div class="container">
+      
+      <!-- 상단 도서 요약 & 사이트 유의사항 배너 -->
+      <div class="notice-banner" id="notice-banner">
+        <div class="notice-thumb" id="detail-book-thumb" style="background:#4a90e2;">
+          <span style="font-size:10px; background:rgba(0,0,0,0.3); padding:1px 4px; border-radius:2px; margin-bottom:4px;">2027</span>
+          <span id="detail-book-title-short">컴활 2급 실기</span>
+        </div>
+        <div class="notice-body">
+          <div class="notice-title">
+            <span>ℹ</span> 사이트 유의사항
+          </div>
+          <p class="notice-text">
+            본 사이트는 출판사의 채점프로그램 개발자가 직접 운영하고 있습니다. 교재에서 제공하는 채점프로그램과 동일한 채점 결과를 제공하며, 사이트 오류 발생 시 <strong>pang2041@hanafos.com</strong>으로 교재명, 연도, 급수 및 채점 파일을 첨부해주시면 신속히 반영하겠습니다.<br>
+            <span style="color:#c0392b;">※ 단순 오답 문의는 출판사 Q&A 게시판을 이용 부탁드립니다.</span>
+          </p>
+        </div>
+        <button class="notice-close" onclick="document.getElementById('notice-banner').style.display='none'">✕</button>
+      </div>
+
+      <!-- 컴활 2급 실기 공식 채점 기준 요약 배너 -->
+      <div class="criteria-banner">
+        <div class="criteria-badge-box">
+          <span class="criteria-main-badge">합격 기준</span>
+          <span class="criteria-pass-text">100점 만점 중 <strong>70점 이상 합격</strong></span>
+        </div>
+        <div class="criteria-chips">
+          <div class="chip-item" title="기본작업-1(5점/부분X), 기본작업-2(10점/부분O), 기본작업-3(5점/부분X)">
+            <span class="chip-title">기본작업</span>
+            <span class="chip-score">20점</span>
+            <span class="chip-partial partial-mix">부분점수 일부</span>
+          </div>
+          <div class="chip-item" title="함수 5문제(각 8점), 부분점수 없음. 결과값 일치 시 정답 인정">
+            <span class="chip-title">계산작업</span>
+            <span class="chip-score">40점</span>
+            <span class="chip-partial partial-no">부분점수 없음 (문제당 8점)</span>
+          </div>
+          <div class="chip-item" title="피벗/시나리오/목표값 등 2문제(각 10점), 하나라도 틀리면 10점 감점">
+            <span class="chip-title">분석작업</span>
+            <span class="chip-score">20점</span>
+            <span class="chip-partial partial-no">부분점수 없음 (문제당 10점)</span>
+          </div>
+          <div class="chip-item" title="매크로 2문제(각 5점/부분O), 차트 5문항(각 2점/부분O)">
+            <span class="chip-title">기타작업</span>
+            <span class="chip-score">20점</span>
+            <span class="chip-partial partial-yes">부분점수 있음</span>
+          </div>
+        </div>
+        <button class="btn-criteria-detail" id="btn-open-criteria-modal">
+          <span>📖</span> 채점기준 전문보기
+        </button>
+      </div>
+
+      <!-- 2열 메인 작업 영역 -->
+      <div class="grade-workspace">
+        
+        <!-- 좌측 컬럼: 회차 선택, 파일 업로드, 상세 점수 -->
+        <div class="left-pane">
+          
+          <!-- 문제 유형 선택 카드 -->
+          <div class="sub-panel">
+            <div class="sub-panel-title">
+              <span>📑 문제 유형 선택</span>
+              <span style="font-size:16px;">⏱</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">회차 선택</label>
+              <select class="form-select" id="select-round">
+                <!-- JS에서 동적 렌더링 -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">문제 파일</label>
+              <div class="btn-group-2">
+                <button class="btn-file-dl" id="btn-download-round">
+                  <span>⬇</span> 해당회차 다운
+                </button>
+                <button class="btn-file-dl" onclick="alert('전체 회차(ZIP) 압축파일 다운로드를 시작합니다.')">
+                  <span>🗂</span> 전체 다운 (ZIP)
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">정보 입력</label>
+              <div class="input-row">
+                <input type="text" class="form-input" id="input-teacher" placeholder="선생님 ID">
+                <input type="text" class="form-input" id="input-student" placeholder="학생 닉네임">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">작성 파일</label>
+              <input type="file" id="file-uploader" style="display:none;" accept=".xlsx, .xlsm, .accdb">
+              <div class="dropzone" id="dropzone" onclick="document.getElementById('file-uploader').click()">
+                <div class="dropzone-text" id="dropzone-text">
+                  <span>⬆</span> 채점할 파일 선택 (클릭 또는 드래그)
+                </div>
+              </div>
+            </div>
+
+            <div class="action-row">
+              <span class="badge-wait">대기자 0</span>
+              <button class="btn-grade-now" id="btn-start-grade">
+                <span>✓</span> 채점시작
+              </button>
+              <button class="btn-print" onclick="window.print()">
+                <span>🖨</span> 인쇄
+              </button>
+            </div>
+          </div>
+
+          <!-- 작업별 상세 점수 카드 -->
+          <div class="sub-panel">
+            <div class="sub-panel-title">
+              <span>🚩 작업별 상세 점수</span>
+              <span class="criteria-badge-mini" onclick="document.getElementById('modal-criteria').classList.add('active');">기준보기 ℹ</span>
+            </div>
+
+            <div class="part-score-row">
+              <span class="part-tag">문제1</span>
+              <div class="part-name-input">
+                <span class="part-title">기본작업 (20점)</span>
+                <span class="part-subtext">입력 5점(부분X) · 서식 10점(각 2점) · 필터/조건부 5점</span>
+              </div>
+              <div class="part-score-val" id="score-part1">0점</div>
+            </div>
+
+            <div class="part-score-row">
+              <span class="part-tag">문제2</span>
+              <div class="part-name-input">
+                <span class="part-title">계산작업 (40점)</span>
+                <span class="part-subtext">함수 5문제 (각 8점 / 부분점수 없음)</span>
+              </div>
+              <div class="part-score-val" id="score-part2">0점</div>
+            </div>
+
+            <div class="part-score-row">
+              <span class="part-tag">문제3</span>
+              <div class="part-name-input">
+                <span class="part-title">분석작업 (20점)</span>
+                <span class="part-subtext">피벗/시나리오 등 2문제 (각 10점 / 부분점수 없음)</span>
+              </div>
+              <div class="part-score-val" id="score-part3">0점</div>
+            </div>
+
+            <div class="part-score-row">
+              <span class="part-tag">문제4</span>
+              <div class="part-name-input">
+                <span class="part-title">기타작업 (20점)</span>
+                <span class="part-subtext">매크로 2문제(각 5점/부분O) · 차트 5문항(각 2점/부분O)</span>
+              </div>
+              <div class="part-score-val" id="score-part4">0점</div>
+            </div>
+
+            <!-- TOTAL SCORE 큰 박스 & 합격/불합격 판정 -->
+            <div class="total-score-card">
+              <div class="total-score-header">
+                <div class="total-score-label">TOTAL SCORE</div>
+                <div class="pass-status-pill waiting" id="pass-status-pill">
+                  <span class="pill-dot">●</span> <span id="pass-status-text">채점 대기</span>
+                </div>
+              </div>
+              <div class="total-score-num" id="total-score-num">0 <span style="font-size:20px; font-weight:normal;">점</span></div>
+              <div class="pass-info-note">합격 기준: <strong>70점 이상</strong> / 100점 만점</div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- 우측 컬럼: 감점 내역 및 분석 테이블 -->
+        <div class="right-pane">
+          <div class="deduct-header">
+            <div class="deduct-title">
+              <span>📋</span> 감점 내역 및 분석
+            </div>
+            <div class="deduct-badges">
+              <span class="badge-info badge-blue" id="badge-candidates">👤 인원: 494명</span>
+              <span class="badge-info badge-green" id="badge-average">📊 평균: 28.83점</span>
+            </div>
+          </div>
+
+          <div class="deduct-table-container">
+            <table class="deduct-table">
+              <thead>
+                <tr>
+                  <th style="width: 75px;">문제번호</th>
+                  <th style="width: 170px;">작업영역</th>
+                  <th style="width: 65px; text-align: center;">감점</th>
+                  <th style="width: 105px; text-align: center;">부분점수 기준</th>
+                  <th>오류 상세내용</th>
+                </tr>
+              </thead>
+              <tbody id="deduct-table-body">
+                <tr>
+                  <td colspan="5" style="text-align: center; padding: 60px 0; color: #888;">
+                    채점할 파일을 선택하고 <strong>[채점시작]</strong> 버튼을 누르면 감점 내역이 분석됩니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 하단 액션 버튼 (점수별 통계보기 / 동영상 강좌) -->
+      <div class="sub-actions-center">
+        <button class="btn-large-stat" id="btn-open-stats-modal">
+          <span>📊</span> 점수별 통계보기
+        </button>
+        <button class="btn-large-video" onclick="alert('동영상 강좌 유튜브 채널로 연결됩니다.')">
+          <span>▶</span> 동영상 강좌
+        </button>
+      </div>
+
+      <!-- 하단 순위 차트 (학생 누적점수 순위 / 선생님 누적점수 순위) -->
+      <div class="ranking-grid">
+        <div class="ranking-card">
+          <div class="ranking-title">
+            <span>🏆</span> 학생 누적점수 순위
+          </div>
+          <div class="chart-wrapper-rank">
+            <canvas id="studentRankChart"></canvas>
+          </div>
+        </div>
+        <div class="ranking-card">
+          <div class="ranking-title">
+            <span>👥</span> 선생님 누적점수 순위
+          </div>
+          <div class="chart-wrapper-rank">
+            <canvas id="teacherRankChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 이기적 스터디카페 배너 -->
+      <div class="cafe-banner">
+        <div class="medal-icons">
+          <div class="medal-badge">1위</div>
+          <div class="medal-badge">1위</div>
+          <div class="medal-badge">1위</div>
+          <div class="medal-badge">1위</div>
+        </div>
+        <div class="cafe-title">이기적 스터디카페</div>
+      </div>
+
+      <!-- 상세 푸터 -->
+      <footer style="text-align: center; color: #888; font-size: 11px; margin-top: 20px;">
+        © 2026 · Programmed by kys (pang2041@hanafos.com)
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- 3. 출판사 자료실 화면 (영진닷컴 출판사 자료실 1:1 클론) -->
+  <!-- ======================================================== -->
+  <main id="archive-view" class="page-view">
+    
+    <!-- 채점소 복귀 상단 안내 띠바 -->
+    <div class="archive-top-return-bar">
+      <div class="archive-return-inner">
+        <span>🌷 컴퓨터활용능력 실기 채점프로그램에서 영진닷컴 출판사 자료실로 이동했습니다.</span>
+        <button class="btn-return-home" onclick="showHomeView()">
+          <span>🏠</span> 채점프로그램 Home으로 돌아가기
+        </button>
+      </div>
+    </div>
+
+    <!-- 영진닷컴 상단 유틸리티 헤더 -->
+    <div class="yj-header-wrapper">
+      <div class="yj-top-utility">
+        <div class="yj-brand-logos">
+          <div class="yj-brand-logo yj-main">
+            <span class="yj-logo-text">Y.</span>
+            <span class="yj-logo-sub">영진닷컴</span>
+          </div>
+          <div class="yj-brand-logo">
+            <span class="yj-badge-brand">이롭게<br>가치있게<br>적합하게</span>
+            <span class="yj-brand-name">이기적 수험서</span>
+          </div>
+          <div class="yj-brand-logo">
+            <span class="yj-brand-icon">☕</span>
+            <span class="yj-brand-name">스터디 카페</span>
+          </div>
+          <div class="yj-brand-logo">
+            <span class="yj-brand-icon">📚</span>
+            <span class="yj-brand-name">온라인서점</span>
+          </div>
+        </div>
+        <div class="yj-user-menu">
+          <a href="javascript:void(0)" onclick="showHomeView()">홈</a>
+          <span class="sep">|</span>
+          <a href="javascript:void(0)" onclick="alert('로그인 팝업이 표시됩니다.')">로그인</a>
+          <span class="sep">|</span>
+          <a href="javascript:void(0)" onclick="alert('회원가입 페이지로 이동합니다.')">회원가입</a>
+          <span class="sep">|</span>
+          <a href="javascript:void(0)" onclick="alert('비밀번호 찾기 페이지로 이동합니다.')">비밀번호 찾기</a>
+          <button class="yj-btn-account" onclick="alert('계좌제신청 페이지로 이동합니다.')">계좌제신청</button>
+          <button class="yj-btn-bulk" onclick="alert('대량구매 문의 페이지로 이동합니다.')">대량구매</button>
+        </div>
+      </div>
+
+      <!-- 영진닷컴 메인 GNB 네비게이션 -->
+      <nav class="yj-gnb-bar">
+        <div class="yj-gnb-inner">
+          <ul class="yj-gnb-list">
+            <li><a href="javascript:void(0)" onclick="alert('무료동영상 강좌 목록으로 이동합니다.')">무료동영상</a></li>
+            <li><a href="javascript:void(0)" onclick="alert('질문답변 게시판으로 이동합니다.')">질문답변</a></li>
+            <li><a href="javascript:void(0)" onclick="alert('기출문제 게시판으로 이동합니다.')">기출문제</a></li>
+            <li class="active"><a href="javascript:void(0)">자료실</a></li>
+            <li><a href="javascript:void(0)" onclick="alert('정오표 게시판으로 이동합니다.')">정오표</a></li>
+            <li><a href="javascript:void(0)" onclick="alert('커뮤니티로 이동합니다.')">커뮤니티</a></li>
+            <li class="has-sub">
+              <a href="javascript:void(0)">도서소개 ▾</a>
+              <div class="yj-submenu">
+                <a href="javascript:void(0)">워드프로세서</a>
+                <a href="javascript:void(0)" class="highlight">컴퓨터활용능력</a>
+                <a href="javascript:void(0)">정보처리/사무자동화/정보기기</a>
+                <a href="javascript:void(0)">ITQ</a>
+                <a href="javascript:void(0)">GTQ</a>
+                <a href="javascript:void(0)">컴퓨터그래픽</a>
+                <a href="javascript:void(0)">웹디자인</a>
+                <a href="javascript:void(0)">한국사</a>
+                <a href="javascript:void(0)">조리/제과제빵/운전면허</a>
+                <a href="javascript:void(0)">기타</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <!-- 자료실 메인 콘텐츠 컨테이너 -->
+    <div class="yj-container">
+      
+      <!-- 자료실 메인 타이틀 바 -->
+      <div class="archive-header-title">
+        <div class="archive-title-left">
+          <h2 class="archive-main-title">자료실</h2>
+          <span class="archive-sub-title">정답 및 해설자료를 자유롭게 다운로드 받을 수 있습니다</span>
+        </div>
+        <div class="archive-category-select">
+          <button class="btn-green-category">
+            <span>컴퓨터활용능력</span>
+            <span class="icon-down">▾</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 경로 탐색 바 (Breadcrumb) -->
+      <div class="archive-breadcrumb">
+        <span class="crumb-home" onclick="showHomeView()">🏠</span>
+        <span class="crumb-sep">&gt;</span>
+        <span>자료실</span>
+        <span class="crumb-sep">&gt;</span>
+        <span class="crumb-current">컴퓨터활용능력</span>
+      </div>
+
+      <!-- 검색 바 -->
+      <div class="archive-search-box">
+        <div class="search-select-wrap">
+          <select class="search-type-select" id="archive-search-type">
+            <option value="title">제목</option>
+            <option value="code">도서코드</option>
+            <option value="author">작성자</option>
+          </select>
+        </div>
+        <input type="text" class="search-keyword-input" id="archive-search-input" placeholder="도서명 또는 도서코드 검색 (예: 2027, 2급, 기출, 기본서...)">
+        <button class="btn-archive-search" id="btn-archive-search">검색</button>
+        <button class="btn-archive-reset" id="btn-archive-reset" title="전체 목록 다시보기">전체보기</button>
+      </div>
+
+      <!-- 게시판 테이블 -->
+      <div class="archive-table-container">
+        <table class="archive-table">
+          <thead>
+            <tr>
+              <th style="width: 70px; text-align: center;">번호</th>
+              <th>제목</th>
+              <th style="width: 100px; text-align: center;">이름</th>
+              <th style="width: 110px; text-align: center;">작성일</th>
+              <th style="width: 90px; text-align: center;">첨부파일</th>
+              <th style="width: 80px; text-align: center;">조회수</th>
+            </tr>
+          </thead>
+          <tbody id="archive-table-body">
+            <!-- JS 동적 렌더링 -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 하단 페이지네이션 -->
+      <div class="archive-pagination">
+        <a href="javascript:void(0)" class="page-nav disabled">&laquo;</a>
+        <a href="javascript:void(0)" class="page-nav disabled">&lt;</a>
+        <a href="javascript:void(0)" class="page-num active">1</a>
+        <a href="javascript:void(0)" class="page-num">2</a>
+        <a href="javascript:void(0)" class="page-num">3</a>
+        <a href="javascript:void(0)" class="page-num">4</a>
+        <a href="javascript:void(0)" class="page-num">5</a>
+        <a href="javascript:void(0)" class="page-num">6</a>
+        <a href="javascript:void(0)" class="page-num">7</a>
+        <a href="javascript:void(0)" class="page-num">8</a>
+        <a href="javascript:void(0)" class="page-num">9</a>
+        <a href="javascript:void(0)" class="page-num">10</a>
+        <a href="javascript:void(0)" class="page-nav">&gt;</a>
+        <a href="javascript:void(0)" class="page-nav">&raquo;</a>
+      </div>
+
+      <!-- 자료실 하단 채점 프로그램 바로가기 배너 -->
+      <div class="archive-return-card">
+        <div class="return-card-content">
+          <div class="card-icon">🌷</div>
+          <div class="card-text">
+            <h3>자료를 다운로드 받으셨나요? 실기 채점소에서 바로 채점해보세요!</h3>
+            <p>2026-2027 최신 컴퓨터활용능력 1급 · 2급 실기 자동 채점 및 감점 분석을 무료로 이용하실 수 있습니다.</p>
+          </div>
+        </div>
+        <button class="btn-return-action" onclick="showHomeView()">
+          <span>✎</span> 실기 채점하러 가기
+        </button>
+      </div>
+
+    </div>
+
+    <!-- 영진닷컴 공식 푸터 -->
+    <footer class="yj-footer">
+      <div class="yj-footer-links">
+        <a href="javascript:void(0)">회사소개</a>
+        <span class="sep">|</span>
+        <a href="javascript:void(0)">이용약관</a>
+        <span class="sep">|</span>
+        <a href="javascript:void(0)"><strong>개인정보취급방침</strong></a>
+        <span class="sep">|</span>
+        <a href="javascript:void(0)">콘텐츠 연구소</a>
+      </div>
+      <div class="yj-footer-info">
+        <div class="yj-footer-logo">
+          <span style="font-size:22px; font-weight:bold; color:#52b788;">YoungJin.com</span>
+          <span style="font-size:11px; color:#888;">영진닷컴</span>
+        </div>
+        <div class="yj-footer-address">
+          서울특별시 금천구 디지털로9길 32, 갑을그레이트밸리 B동 1001호 (우)08512 TEL 1588-0789 FAX 02-867-1987<br>
+          대표이사 김길수 사업자등록번호 120-87-14492 통신판매신고 제 06555호<br>
+          COPYRIGHT (c) 2026 YOUNGJIIN.COM. ALL RIGHT RESERVED.
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- 4. 모달 (Popups) -->
+  <!-- ======================================================== -->
+  
+  <!-- 모달 A: 문제파일 다운로드 모달 (이미지 4번 일치) -->
+  <div class="modal-overlay" id="modal-download">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <span>문제파일 다운로드</span>
+        <button class="modal-close-btn" id="modal-download-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 8px;">문제파일을 다운받습니다.</p>
+        <p style="margin-bottom: 8px;">첨부파일이 필요한 회차의 경우는 <strong>[전체 내려받기]</strong>로 받은후 작업해 주세요.</p>
+        <p style="color: #2b70c9; font-weight: bold;">다운받고 싶은 과목 버튼을 누르세요</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-subject-access" onclick="alert('액세스(.accdb) 문제파일을 다운로드합니다.'); document.getElementById('modal-download').classList.remove('active');">액세스</button>
+        <button class="btn-subject-excel" onclick="alert('엑셀(.xlsx) 문제파일을 다운로드합니다.'); document.getElementById('modal-download').classList.remove('active');">엑셀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 모달 B: 점수별 통계보기 모달 (이미지 3번 일치) -->
+  <div class="modal-overlay" id="modal-stats">
+    <div class="modal-dialog modal-large">
+      <div class="modal-header">
+        <span>회차별 점수 분포 통계</span>
+        <button class="modal-close-btn" id="modal-stats-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="stats-pie-grid">
+          
+          <!-- 해당 회차 총점수 비율 -->
+          <div class="pie-card full-width">
+            <div class="pie-title">해당 회차의 총점수 비율(명)</div>
+            <div class="chart-wrapper-pie" style="max-width: 420px; margin: 0 auto; height: 240px;">
+              <canvas id="pieTotalChart"></canvas>
+            </div>
+          </div>
+
+          <!-- 문제1 비율 -->
+          <div class="pie-card">
+            <div class="pie-title">문제1 비율(명)</div>
+            <div class="chart-wrapper-pie">
+              <canvas id="piePart1Chart"></canvas>
+            </div>
+          </div>
+
+          <!-- 문제2 비율 -->
+          <div class="pie-card">
+            <div class="pie-title">문제2 비율(명)</div>
+            <div class="chart-wrapper-pie">
+              <canvas id="piePart2Chart"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-subject-excel" id="modal-stats-confirm">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 모달 C: 도움말 모달 -->
+  <div class="modal-overlay" id="modal-help">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <span>채점프로그램 이용 도움말</span>
+        <button class="modal-close-btn" id="modal-help-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <ol style="padding-left: 18px; line-height: 1.8;">
+          <li>원하는 출간 교재를 선택하고 <strong>[채점하기]</strong> 버튼을 누릅니다.</li>
+          <li>기출 회차를 선택하고 문제 파일을 내려받아 문제를 풉니다.</li>
+          <li>작업을 완료한 파일(엑셀/액세스)을 업로드 영역에 등록합니다.</li>
+          <li><strong>[채점시작]</strong> 버튼을 누르면 자동 채점이 진행되며 오답 내역과 상세 점수가 제공됩니다.</li>
+        </ol>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-subject-excel" id="modal-help-confirm">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 모달 D: 2급 실기 채점 기준 공식 모달 (사용자 제공 기준 100% 반영) -->
+  <div class="modal-overlay" id="modal-criteria">
+    <div class="modal-dialog modal-large modal-criteria-dialog">
+      <div class="modal-header">
+        <span>📋 컴퓨터활용능력 2급 실기 배점 및 부분점수 기준</span>
+        <button class="modal-close-btn" id="modal-criteria-close">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- 합격 안내 상단 알림 배너 -->
+        <div class="criteria-modal-banner">
+          <div class="banner-icon">🏆</div>
+          <div class="banner-text">
+            <h4>컴퓨터활용능력 2급 실기 합격 기준</h4>
+            <p><strong>100점 만점에 70점 이상</strong>이면 합격입니다.</p>
+          </div>
+          <div class="banner-badge">총 100점 / 커트라인 70점</div>
+        </div>
+
+        <h3 class="criteria-section-title">영역별 배점 및 부분점수 세부 기준</h3>
+
+        <div class="criteria-grid-cards">
+          
+          <!-- 1. 기본작업 -->
+          <div class="criteria-card card-part1">
+            <div class="card-head">
+              <span class="badge-part">기본작업</span>
+              <span class="score-part">총 20점</span>
+            </div>
+            <ul class="criteria-list">
+              <li>
+                <div class="item-head">
+                  <span class="item-name">기본작업-1 (데이터 입력)</span>
+                  <span class="item-point">5점</span>
+                  <span class="item-tag tag-none">부분점수 없음</span>
+                </div>
+                <div class="item-desc">하나라도 틀리거나 오타가 있으면 0점 처리됩니다.</div>
+              </li>
+              <li>
+                <div class="item-head">
+                  <span class="item-name">기본작업-2 (셀 서식 / 조건부 서식 등)</span>
+                  <span class="item-point">10점</span>
+                  <span class="item-tag tag-has">부분점수 있음</span>
+                </div>
+                <div class="item-desc">총 5문제, 각 2점씩 부분점수가 인정됩니다.</div>
+              </li>
+              <li>
+                <div class="item-head">
+                  <span class="item-name">기본작업-3 (고급필터, 조건부서식 등)</span>
+                  <span class="item-point">5점</span>
+                  <span class="item-tag tag-none">부분점수 없음</span>
+                </div>
+                <div class="item-desc">조건이나 서식 결과가 온전히 일치해야 인정됩니다.</div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 2. 계산작업 -->
+          <div class="criteria-card card-part2">
+            <div class="card-head">
+              <span class="badge-part">계산작업</span>
+              <span class="score-part">총 40점</span>
+            </div>
+            <ul class="criteria-list">
+              <li>
+                <div class="item-head">
+                  <span class="item-name">함수 문제 (총 5문제)</span>
+                  <span class="item-point">각 8점 (40점)</span>
+                  <span class="item-tag tag-none">부분점수 없음</span>
+                </div>
+                <div class="item-desc">문제당 8점 배점이며 틀릴 시 8점 전체가 감점됩니다.</div>
+              </li>
+            </ul>
+            <div class="criteria-callout tip">
+              <span class="callout-icon">💡</span>
+              <div class="callout-content">
+                <strong>정답 인정 기준</strong><br>
+                결과값이 정답과 일치하면 함수식의 세부 구조나 셀 참조 방식($ 사용 여부 등)이 달라도 정답으로 인정됩니다.
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. 분석작업 -->
+          <div class="criteria-card card-part3">
+            <div class="card-head">
+              <span class="badge-part">분석작업</span>
+              <span class="score-part">총 20점</span>
+            </div>
+            <ul class="criteria-list">
+              <li>
+                <div class="item-head">
+                  <span class="item-name">피벗테이블, 시나리오, 목표값 찾기 등</span>
+                  <span class="item-point">각 10점 (총 2문제)</span>
+                  <span class="item-tag tag-none">부분점수 없음</span>
+                </div>
+                <div class="item-desc">총 2문제 출제 (각 10점씩)</div>
+              </li>
+            </ul>
+            <div class="criteria-callout warn">
+              <span class="callout-icon">⚠️</span>
+              <div class="callout-content">
+                <strong>감점 유의사항</strong><br>
+                하나라도 조건을 틀리거나 위치가 어긋나면 해당 문제 점수(10점)가 전부 감점됩니다.
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. 기타작업 -->
+          <div class="criteria-card card-part4">
+            <div class="card-head">
+              <span class="badge-part">기타작업</span>
+              <span class="score-part">총 20점</span>
+            </div>
+            <ul class="criteria-list">
+              <li>
+                <div class="item-head">
+                  <span class="item-name">매크로 작업 (총 2문제)</span>
+                  <span class="item-point">각 5점 (10점)</span>
+                  <span class="item-tag tag-has">부분점수 있음</span>
+                </div>
+                <div class="item-desc">매크로 기록 및 버튼/도형 생성 연결에 부분점수가 인정됩니다.</div>
+              </li>
+              <li>
+                <div class="item-head">
+                  <span class="item-name">차트 작업 (총 5문항)</span>
+                  <span class="item-point">각 2점 (10점)</span>
+                  <span class="item-tag tag-has">부분점수 있음</span>
+                </div>
+                <div class="item-desc">각 세부 지시사항별로 2점씩 부분점수가 인정됩니다.</div>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn-subject-excel" id="modal-criteria-confirm">확인 및 닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 앱 스크립트 로드 -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
