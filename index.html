@@ -28,22 +28,128 @@
           <p class="brand-desc">컴퓨터활용능력 1급 · 2급 실기 공식 수험서 자동 채점 프로그램</p>
         </div>
       </div>
-      <nav class="header-nav">
-        <a href="javascript:void(0)" class="nav-link" id="nav-home">
-          <span class="nav-icon">🏠</span> <span>채점프로그램 Home</span>
-        </a>
-        <a href="javascript:void(0)" class="nav-link" id="nav-archive">
-          <span class="nav-icon">📂</span> <span>출판사 자료실</span>
-        </a>
-        <a href="javascript:void(0)" class="nav-link" id="nav-criteria">
-          <span class="nav-icon">📋</span> <span>2급 실기 채점기준</span>
-        </a>
-        <a href="javascript:void(0)" class="nav-link" id="nav-help">
-          <span class="nav-icon">💡</span> <span>도움말 & FAQ</span>
-        </a>
-      </nav>
+      
+      <!-- 우측 네비게이션 & 로그인 사용자 영역 -->
+      <div class="header-right-box">
+        <div class="header-user-area" id="header-user-area" style="display: none;">
+          <span class="user-welcome">👋 환영합니다, <strong id="header-user-id">학생</strong>님!</span>
+          <button class="btn-logout" id="btn-logout" title="로그아웃">로그아웃</button>
+        </div>
+        <nav class="header-nav" id="header-nav" style="display: none;">
+          <a href="javascript:void(0)" class="nav-link" id="nav-home">
+            <span class="nav-icon">🏠</span> <span>채점 Home</span>
+          </a>
+          <a href="javascript:void(0)" class="nav-link" id="nav-archive">
+            <span class="nav-icon">📂</span> <span>출판사 자료실</span>
+          </a>
+          <a href="javascript:void(0)" class="nav-link" id="nav-criteria">
+            <span class="nav-icon">📋</span> <span>2급 채점기준</span>
+          </a>
+          <a href="javascript:void(0)" class="nav-link" id="nav-help">
+            <span class="nav-icon">💡</span> <span>도움말</span>
+          </a>
+        </nav>
+      </div>
+
     </div>
   </header>
+
+  <!-- ======================================================== -->
+  <!-- 0. 로그인 / 회원가입 화면 섹션 (SPA 화면 토글) -->
+  <!-- ======================================================== -->
+  <section id="auth-section" class="auth-section">
+    <div class="auth-container">
+      
+      <div class="auth-card">
+        
+        <div class="auth-brand-head">
+          <div class="auth-flower-icon">🌷</div>
+          <h2 class="auth-title">컴활 실기 채점소</h2>
+          <p class="auth-subtitle">로그인 후 나의 누적 채점 기록과 감점 분석을 이용하세요!</p>
+        </div>
+
+        <!-- 탭 버튼 (로그인 / 회원가입) -->
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab-btn active" id="tab-btn-login">로그인</button>
+          <button type="button" class="auth-tab-btn" id="tab-btn-signup">회원가입</button>
+        </div>
+
+        <!-- 알림/오류 메시지 박스 -->
+        <div class="auth-msg-box" id="auth-msg-box" style="display:none;"></div>
+
+        <!-- 1) 로그인 폼 -->
+        <form class="auth-form" id="login-form">
+          <div class="auth-field">
+            <label for="login-username" class="auth-label">아이디</label>
+            <div class="auth-input-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" id="login-username" class="auth-input" placeholder="아이디를 입력하세요" required autocomplete="username">
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label for="login-password" class="auth-label">비밀번호</label>
+            <div class="auth-input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="login-password" class="auth-input" placeholder="비밀번호를 입력하세요" required autocomplete="current-password">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-auth-submit" id="btn-login-submit">
+            <span>로그인하기</span> ➔
+          </button>
+
+          <div class="auth-footer-prompt">
+            아직 계정이 없으신가요? 
+            <a href="javascript:void(0)" class="auth-link" id="link-to-signup">회원가입하기</a>
+          </div>
+        </form>
+
+        <!-- 2) 회원가입 폼 -->
+        <form class="auth-form" id="signup-form" style="display: none;">
+          <div class="auth-field">
+            <label for="signup-username" class="auth-label">아이디</label>
+            <div class="auth-input-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" id="signup-username" class="auth-input" placeholder="영문/숫자 아이디 (4자 이상)" required autocomplete="username">
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label for="signup-password" class="auth-label">비밀번호</label>
+            <div class="auth-input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="signup-password" class="auth-input" placeholder="비밀번호를 입력하세요 (4자 이상)" required autocomplete="new-password">
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label for="signup-password-confirm" class="auth-label">비밀번호 확인</label>
+            <div class="auth-input-wrap">
+              <span class="input-icon">🔑</span>
+              <input type="password" id="signup-password-confirm" class="auth-input" placeholder="비밀번호를 다시 한 번 입력하세요" required autocomplete="new-password">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-auth-submit btn-signup-theme" id="btn-signup-submit">
+            <span>회원가입 완료</span> ✓
+          </button>
+
+          <div class="auth-footer-prompt">
+            이미 계정이 있으신가요? 
+            <a href="javascript:void(0)" class="auth-link" id="link-to-login">로그인하기</a>
+          </div>
+        </form>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- [메인 애플리케이션 섹션] (로그인 시 활성화) -->
+  <!-- ======================================================== -->
+  <div id="app-main-section" style="display: none;">
 
   <!-- ======================================================== -->
   <!-- 1. 메인 화면 (도서 목록) -->
@@ -343,6 +449,50 @@
         </button>
       </div>
 
+      <!-- ======================================================== -->
+      <!-- [신규 기능] 나의 누적 채점 기록 (사용자 고유 데이터 연동) -->
+      <!-- ======================================================== -->
+      <div class="user-history-panel" id="user-history-panel">
+        <div class="history-panel-header">
+          <div class="history-title-wrap">
+            <span class="history-icon">📜</span>
+            <h3 class="history-title">나의 누적 채점 기록</h3>
+            <span class="history-badge" id="history-count-badge">총 0회</span>
+            <span class="history-user-tag" id="history-user-tag">학생 계정</span>
+          </div>
+          <div class="history-actions">
+            <button class="btn-history-clear" id="btn-clear-history" title="모든 채점 기록 초기화">
+              <span>🗑️</span> 전체 초기화
+            </button>
+          </div>
+        </div>
+
+        <div class="history-table-container">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th style="width: 130px;">응시 일시</th>
+                <th>교재 및 회차</th>
+                <th style="width: 85px; text-align: center;">기본 (20)</th>
+                <th style="width: 85px; text-align: center;">계산 (40)</th>
+                <th style="width: 85px; text-align: center;">분석 (20)</th>
+                <th style="width: 85px; text-align: center;">기타 (20)</th>
+                <th style="width: 75px; text-align: center;">총점</th>
+                <th style="width: 100px; text-align: center;">결과</th>
+                <th style="width: 55px; text-align: center;">삭제</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body">
+              <tr>
+                <td colspan="9" class="history-empty-row">
+                  아직 채점 기록이 없습니다. 위에서 문제를 채점해보세요!
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- 하단 순위 차트 (학생 누적점수 순위 / 선생님 누적점수 순위) -->
       <div class="ranking-grid">
         <div class="ranking-card">
@@ -579,6 +729,7 @@
     </footer>
 
   </main>
+  </div><!-- #app-main-section end -->
 
   <!-- ======================================================== -->
   <!-- 4. 모달 (Popups) -->

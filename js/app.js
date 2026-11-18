@@ -1,13 +1,372 @@
-// app.js - 핵심 로직 및 인터랙션 제어
+// app.js - 핵심 로직 및 인터랙션 제어 (회원가입/로그인 & 사용자별 누적 채점 기록 포함)
 
 let currentBook = null;
 let charts = {};
+
+/* ==========================================================================
+   0. 회원가입, 로그인 및 사용자별 누적 채점 기록 (localStorage)
+   ========================================================================== */
+
+const STORAGE_KEYS = {
+  USERS: "com_users",
+  CURRENT_USER: "com_currentUser",
+  RECORDS_PREFIX: "com_records_"
+};
+
+// 1) 사용자 계정 관리 함수
+function getUsers() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveUser(user) {
+  const users = getUsers();
+  users.push(user);
+  localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+}
+
+function getCurrentUser() {
+  try {
+    const data = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+    return data ? JSON.parse(data) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function setCurrentUser(user) {
+  localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
+}
+
+function removeCurrentUser() {
+  localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+}
+
+// 2) 로그인 상태에 따른 화면 토글 (SPA 구조)
+function checkAuthState() {
+  const user = getCurrentUser();
+  const authSection = document.getElementById("auth-section");
+  const appSection = document.getElementById("app-main-section");
+  const headerUserArea = document.getElementById("header-user-area");
+  const headerNav = document.getElementById("header-nav");
+  const headerUserId = document.getElementById("header-user-id");
+
+  if (user && user.username) {
+    // 로그인 상태 -> 메인 앱 표시
+    if (authSection) authSection.style.display = "none";
+    if (appSection) appSection.style.display = "block";
+    if (headerUserArea) headerUserArea.style.display = "flex";
+    if (headerNav) headerNav.style.display = "flex";
+    if (headerUserId) headerUserId.innerText = user.username;
+
+    // 학생 닉네임 입력 필드에 자동 반영
+    const inputStudent = document.getElementById("input-student");
+    if (inputStudent && !inputStudent.value) {
+      inputStudent.value = user.username;
+    }
+
+    // 누적 채점 기록 표 렌더링
+    renderUserHistoryTable();
+  } else {
+    // 비로그인 상태 -> 로그인/회원가입 화면 표시
+    if (authSection) authSection.style.display = "flex";
+    if (appSection) appSection.style.display = "none";
+    if (headerUserArea) headerUserArea.style.display = "none";
+    if (headerNav) headerNav.style.display = "none";
+
+    // 폼 초기화 및 메시지 리셋
+    resetAuthForms();
+  }
+}
+
+function resetAuthForms() {
+  const loginForm = document.getElementById("login-form");
+  const signupForm = document.getElementById("signup-form");
+  const msgBox = document.getElementById("auth-msg-box");
+
+  if (loginForm) loginForm.reset();
+  if (signupForm) signupForm.reset();
+  if (msgBox) {
+    msgBox.style.display = "none";
+    msgBox.innerText = "";
+  }
+}
+
+function showAuthMessage(text, isError = true) {
+  const msgBox = document.getElementById("auth-msg-box");
+  if (!msgBox) return;
+  msgBox.style.display = "block";
+  msgBox.className = isError ? "auth-msg-box error" : "auth-msg-box success";
+  msgBox.innerText = text;
+}
+
+// 3) 회원가입 및 로그인 이벤트 바인딩
+function initAuth() {
+  const tabBtnLogin = document.getElementById("tab-btn-login");
+  const tabBtnSignup = document.getElementById("tab-btn-signup");
+  const loginForm = document.getElementById("login-form");
+  const signupForm = document.getElementById("signup-form");
+  const linkToSignup = document.getElementById("link-to-signup");
+  const linkToLogin = document.getElementById("link-to-login");
+  const btnLogout = document.getElementById("btn-logout");
+
+  // 탭 전환: 로그인 선택
+  function activateLoginTab() {
+    tabBtnLogin.classList.add("active");
+    tabBtnSignup.classList.remove("active");
+    loginForm.style.display = "block";
+    signupForm.style.display = "none";
+    const msgBox = document.getElementById("auth-msg-box");
+    if (msgBox) msgBox.style.display = "none";
+  }
+
+  // 탭 전환: 회원가입 선택
+  function activateSignupTab() {
+    tabBtnSignup.classList.add("active");
+    tabBtnLogin.classList.remove("active");
+    signupForm.style.display = "block";
+    loginForm.style.display = "none";
+    const msgBox = document.getElementById("auth-msg-box");
+    if (msgBox) msgBox.style.display = "none";
+  }
+
+  if (tabBtnLogin) tabBtnLogin.addEventListener("click", activateLoginTab);
+  if (tabBtnSignup) tabBtnSignup.addEventListener("click", activateSignupTab);
+  if (linkToSignup) linkToSignup.addEventListener("click", activateSignupTab);
+  if (linkToLogin) linkToLogin.addEventListener("click", activateLoginTab);
+
+  // 로그인 제출
+  if (loginForm) {
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const usernameInput = document.getElementById("login-username");
+      const passwordInput = document.getElementById("login-password");
+      const username = usernameInput ? usernameInput.value.trim() : "";
+      const password = passwordInput ? passwordInput.value : "";
+
+      if (!username || !password) {
+        showAuthMessage("아이디와 비밀번호를 모두 입력해주세요.", true);
+        return;
+      }
+
+      const users = getUsers();
+      const matched = users.find(u => u.username === username && u.password === password);
+
+      if (matched) {
+        // 로그인 성공
+        setCurrentUser({ username: matched.username, createdAt: matched.createdAt });
+        showAuthMessage(`환영합니다, ${matched.username}님! 채점소로 이동합니다.`, false);
+        setTimeout(() => {
+          checkAuthState();
+          showHomeView();
+        }, 400);
+      } else {
+        // 아이디 존재 여부 확인하여 친절한 힌트 제공
+        const userExists = users.some(u => u.username === username);
+        if (userExists) {
+          showAuthMessage("비밀번호가 올바르지 않습니다. 다시 확인해주세요.", true);
+        } else {
+          showAuthMessage("등록되지 않은 아이디입니다. 먼저 회원가입을 진행해주세요.", true);
+        }
+      }
+    });
+  }
+
+  // 회원가입 제출
+  if (signupForm) {
+    signupForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const username = document.getElementById("signup-username").value.trim();
+      const password = document.getElementById("signup-password").value;
+      const passwordConfirm = document.getElementById("signup-password-confirm").value;
+
+      if (username.length < 3) {
+        showAuthMessage("아이디는 최소 3자 이상 입력해주세요.", true);
+        return;
+      }
+      if (password.length < 4) {
+        showAuthMessage("비밀번호는 최소 4자 이상 입력해주세요.", true);
+        return;
+      }
+      if (password !== passwordConfirm) {
+        showAuthMessage("비밀번호 확인이 일치하지 않습니다.", true);
+        return;
+      }
+
+      const users = getUsers();
+      if (users.some(u => u.username === username)) {
+        showAuthMessage("이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.", true);
+        return;
+      }
+
+      // 회원가입 처리
+      const newUser = {
+        username: username,
+        password: password,
+        createdAt: new Date().toISOString()
+      };
+      saveUser(newUser);
+
+      // 자동 로그인 처리 및 안내
+      setCurrentUser({ username: newUser.username, createdAt: newUser.createdAt });
+      showAuthMessage("🎉 회원가입이 완료되었습니다! 자동으로 로그인됩니다.", false);
+      
+      setTimeout(() => {
+        checkAuthState();
+        showHomeView();
+      }, 700);
+    });
+  }
+
+  // 로그아웃 버튼
+  if (btnLogout) {
+    btnLogout.addEventListener("click", () => {
+      if (confirm("로그아웃 하시겠습니까?")) {
+        removeCurrentUser();
+        checkAuthState();
+      }
+    });
+  }
+
+  // 누적 기록 전체 초기화 버튼
+  const btnClearHistory = document.getElementById("btn-clear-history");
+  if (btnClearHistory) {
+    btnClearHistory.addEventListener("click", clearAllUserScoreRecords);
+  }
+}
+
+// 4) 사용자별 채점 점수 누적 기록 함수들
+function getUserScoreRecords(username) {
+  if (!username) return [];
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.RECORDS_PREFIX + username);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveUserScoreRecord(record) {
+  const user = getCurrentUser();
+  if (!user || !user.username) return;
+
+  const username = user.username;
+  const records = getUserScoreRecords(username);
+  records.unshift(record); // 최신순으로 앞쪽에 추가
+  localStorage.setItem(STORAGE_KEYS.RECORDS_PREFIX + username, JSON.stringify(records));
+
+  // 테이블 실시간 갱신
+  renderUserHistoryTable();
+}
+
+function deleteUserScoreRecord(recordId) {
+  const user = getCurrentUser();
+  if (!user || !user.username) return;
+
+  if (!confirm("해당 채점 기록을 삭제하시겠습니까?")) return;
+
+  const username = user.username;
+  let records = getUserScoreRecords(username);
+  records = records.filter(r => r.id !== recordId);
+  localStorage.setItem(STORAGE_KEYS.RECORDS_PREFIX + username, JSON.stringify(records));
+
+  renderUserHistoryTable();
+}
+
+function clearAllUserScoreRecords() {
+  const user = getCurrentUser();
+  if (!user || !user.username) return;
+
+  const records = getUserScoreRecords(user.username);
+  if (records.length === 0) {
+    alert("삭제할 누적 채점 기록이 없습니다.");
+    return;
+  }
+
+  if (confirm(`정말로 ${user.username}님의 모든 채점 기록(${records.length}건)을 초기화하시겠습니까?`)) {
+    localStorage.removeItem(STORAGE_KEYS.RECORDS_PREFIX + user.username);
+    renderUserHistoryTable();
+    alert("모든 누적 채점 기록이 초기화되었습니다.");
+  }
+}
+
+function renderUserHistoryTable() {
+  const tbody = document.getElementById("history-table-body");
+  const countBadge = document.getElementById("history-count-badge");
+  const userTag = document.getElementById("history-user-tag");
+  if (!tbody) return;
+
+  const user = getCurrentUser();
+  if (!user || !user.username) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="9" class="history-empty-row">
+          로그인 후 이용할 수 있습니다.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  const username = user.username;
+  if (userTag) userTag.innerText = `${username} 님의 기록`;
+
+  const records = getUserScoreRecords(username);
+  if (countBadge) countBadge.innerText = `총 ${records.length}회`;
+
+  if (records.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="9" class="history-empty-row">
+          아직 저장된 채점 기록이 없습니다. 상단에서 문제를 풀고 <strong>[채점시작]</strong>을 눌러보세요!
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = records.map(r => {
+    const resultBadge = r.isPass
+      ? `<span class="badge-tag-partial has">🎉 합격 (${r.totalScore}점)</span>`
+      : `<span class="badge-tag-partial none">불합격 (${r.totalScore}점)</span>`;
+
+    return `
+      <tr>
+        <td style="color:#666; font-size:12px;">${r.dateStr}</td>
+        <td>
+          <div style="font-weight:600; color:#2b2d42;">${r.bookTitle}</div>
+          <div style="font-size:11px; color:#6c5ce7;">${r.roundName}</div>
+        </td>
+        <td style="text-align:center; font-weight:bold; color:#1a4f8b;">${r.part1}점</td>
+        <td style="text-align:center; font-weight:bold; color:#1a4f8b;">${r.part2}점</td>
+        <td style="text-align:center; font-weight:bold; color:#1a4f8b;">${r.part3}점</td>
+        <td style="text-align:center; font-weight:bold; color:#1a4f8b;">${r.part4}점</td>
+        <td style="text-align:center; font-size:15px; font-family:'Jua',sans-serif; color:${r.isPass ? '#0ca678' : '#e03131'};">
+          ${r.totalScore}점
+        </td>
+        <td style="text-align:center;">${resultBadge}</td>
+        <td style="text-align:center;">
+          <button class="btn-del-record" onclick="deleteUserScoreRecord('${r.id}')" title="기록 삭제">🗑️</button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+/* ==========================================================================
+   기본 애플리케이션 초기화
+   ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
 });
 
 function initApp() {
+  initAuth();
+  checkAuthState();
   renderBookGrids();
   populateRounds();
   bindEvents();
@@ -107,8 +466,18 @@ function openDetailView(bookId) {
   if (archiveView) archiveView.classList.remove("active");
   window.scrollTo(0, 0);
 
+  // 로그인 사용자 아이디 자동 기입
+  const user = getCurrentUser();
+  const inputStudent = document.getElementById("input-student");
+  if (user && inputStudent) {
+    inputStudent.value = user.username;
+  }
+
   // 점수 및 결과 초기화
   resetGrades();
+
+  // 사용자 누적 채점 기록 렌더링
+  renderUserHistoryTable();
 
   // 순위 차트 렌더링
   setTimeout(() => {
@@ -267,9 +636,31 @@ function runGradeSimulation() {
     // 감점 내역 테이블 렌더링 (2급 기준 부분점수 여부 포함)
     renderDeductions(res.deductions);
 
+    // [신규 기능] 현재 로그인한 사용자 고유 데이터에 이번 채점 결과 저장 (localStorage)
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const dateStr = `${now.getFullYear()}.${pad(now.getMonth()+1)}.${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    const bookTitle = currentBook ? currentBook.title : "컴퓨터활용능력 2급 실기";
+    const roundSelect = document.getElementById("select-round");
+    const roundName = roundSelect ? roundSelect.value : "대표기출따라하기";
+
+    const newRecord = {
+      id: "rec_" + Date.now(),
+      dateStr: dateStr,
+      bookTitle: bookTitle,
+      roundName: roundName,
+      part1: res.scores.part1.score,
+      part2: res.scores.part2.score,
+      part3: res.scores.part3.score,
+      part4: res.scores.part4.score,
+      totalScore: res.scores.total,
+      isPass: isPass
+    };
+    saveUserScoreRecord(newRecord);
+
     const resultMessage = isPass
-      ? `🎉 채점이 완료되었습니다!\n\n총점: ${res.scores.total}점 [합격]\n(컴퓨터활용능력 2급 실기 합격 기준: 70점 이상 통과!)`
-      : `채점이 완료되었습니다.\n\n총점: ${res.scores.total}점 [불합격]\n(컴퓨터활용능력 2급 실기 합격 기준: 70점 이상)`;
+      ? `🎉 채점이 완료되었습니다!\n\n총점: ${res.scores.total}점 [합격]\n(컴퓨터활용능력 2급 실기 합격 기준: 70점 이상 통과!)\n\n※ 하단 '나의 누적 채점 기록'에 이번 결과가 저장되었습니다.`
+      : `채점이 완료되었습니다.\n\n총점: ${res.scores.total}점 [불합격]\n(컴퓨터활용능력 2급 실기 합격 기준: 70점 이상)\n\n※ 하단 '나의 누적 채점 기록'에 이번 결과가 저장되었습니다.`;
 
     alert(resultMessage);
   }, 800);
